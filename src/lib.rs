@@ -68,6 +68,13 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs, missing_debug_implementations, rust_2018_idioms)]
 
+#![cfg_attr(not(target_env = "sgx"), no_std)]
+#![cfg_attr(target_env = "sgx", feature(rustc_private))]
+
+#[cfg(not(target_env = "sgx"))]
+#[macro_use]
+extern crate sgx_tstd as std;
+
 use std::cell::Cell;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
@@ -78,6 +85,7 @@ use std::thread;
 use instant::Instant;
 #[cfg(not(target_arch = "wasm32"))]
 use std::time::Instant;
+use std::untrusted::time::InstantEx;
 
 /// A random number generator.
 #[derive(Debug)]
